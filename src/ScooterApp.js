@@ -46,11 +46,53 @@ class ScooterApp {
     }
 
     createScooter(station) {
-      
+      if(!this.stations[station]) {
+        throw new Error('no such station')
+      }
+      const newScooter = new Scooter(station)
+      this.stations[station].push(newScooter)
+      console.log('created new scooter')
+      return newScooter
+    } 
+
+    dockScooter(scooter, station) {
+      if(!this.stations[station]) {
+        throw new Error('no such station')
     }
+    if(scooter.station === station) {
+      throw new Error('scooter already at station')
+    }
+    scooter.dock(station)
+    this.stations[station].push(scooter)
+    console.log('scooter is docked')
+  }
+
+  rentScooter(scooter, user) {
+    if(scooter.user !== null) {
+      throw new Error('scooter already rented')
+    }
+    let stationName
+    for (const [station, scooters] of Object.entries(this.stations)) {
+      const index = scooters.indexOf(scooter)
+      if(index > -1) {
+        stationName =   station
+        scooters.splice(index, 1)
+        break
+      }
+    }
+    if(!stationName) {
+      throw new Error('scooter not found at any station')
+    }
+    scooter.rent(user)
+    console.log('scooter is rented')
+    return scooter
+  }
+  print() {
+    
   }
 
 
+}
 
 User.use
 module.exports = ScooterApp
